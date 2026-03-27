@@ -1,6 +1,3 @@
--- Data for import to COSC210 practical assignment tables 
---    e.g. your_db_name < MovieDirect_Data.sql
-
 INSERT INTO customers (customer_id,last_name,first_name,address,city,state,postcode)
             VALUES
                 (1,'Woodcock','Paige','1 Ranworth Road', 'MYAREE', 'WA','6154'),
