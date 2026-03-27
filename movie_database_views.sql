@@ -1,19 +1,5 @@
--- COSC210 Practical Assignment Template
-
--- Please complete the assignment questions using the view templates
--- provided below.
-
--- *******************************************************************
---                           IMPORTANT
--- *******************************************************************
-
--- Make sure that you do not alter the names of the views or their 
--- attribute values. If you do your assignment will not work in the
--- auto-marking software and you may lose marks!
-
--- *******************************************************************
-
--- I have not ordered the output because it was not in instructions.
+-- MovieDirect Database: Analytical Views
+-- Views for data integrity and handling non-unique attributes
 
 
 CREATE VIEW movie_summary(movie_title, release_date, media_type, retail_price)
@@ -51,8 +37,7 @@ AS ...
 
 CREATE VIEW richie(movie_title)
 AS ...
--- I haven't applied SELECT DISTINCT as this wasn't in the instructions, though I can see that it could be helpful.
--- Some movies might have multiple identical title listings but different movie_id unique id due to something like re-release.
+-- NOTE: SELECT DISTINCT not applied to allow visibility of potential duplicate title entries (e.g. re-releases with unique IDs).
 
 	SELECT
 		Movies.movie_title
@@ -64,8 +49,7 @@ AS ...
 
 CREATE VIEW retail_price_hike(movie_id , retail_price, new_price)
 AS ...
--- Instructions were ambiguous as to whether new_price should be rounded.
--- I've just followed the instructions to the word, but I think new_price would be better as:
+-- NOTE: Intentionally returning non-rounded values. In deployment, rounding to two decimal values or using NUMERIC would be preferred for currency. E.g.:
 	-- <ROUND(Stock.retail_price * 1.25, 2) AS new_price>
 	
 	SELECT
@@ -79,12 +63,12 @@ AS ...
 
 CREATE VIEW profits_from_movie(movie_id, movie_title, total_profit)
 AS ...
--- I found the instructions a bit ambiguous here. 
--- I've deliberately only included total_profit for movies that have shipped.
--- I've not rounded because we're not instructed. However, it would be more functional if total_profit was:
+-- Only includes profit for movies that have actually shipped.
+-- GROUP BY includes movie_id (not just movie_title) to avoid collapsing non-unique titles.
+	-- NOTE: At deployment, it might be more functional if total_profit was:
 	-- <ROUND(SUM(Stock.retail_price) - SUM(Stock.cost_price), 2) AS total_profit>
-	-- The rounding instruction would need to be modified to CAST to numeric if using REAL as the origin datatype, as I did.
--- Also, we're instructed to group "by movie_title", but GROUP BY must reference all non-aggregated selectors/their unique ID.
+	-- The rounding instruction would need to be modified to CAST to numeric if using REAL as the origin datatype.
+
 
 	SELECT
 		Movies.movie_id,
@@ -105,8 +89,7 @@ AS ...
 
 CREATE VIEW binge_watcher(first_name, last_name)
 AS ...
--- Q1 implies you don't care about distinct values. I've just followed explicit instructions.
--- However, I think it would make sense to <SELECT DISTINCT> for this view;
+-- I think it would make sense to <SELECT DISTINCT> for this view;
 -- otherwise a customer might show up multiple times if they binge on multiple days.
 	-- In this SELECT DISTINCT scenario, I'd remove Shipments.shipment_date from the grouping.
 -- But it might also be helpful to have potential duplicate names;
